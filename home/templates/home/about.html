@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>About Me</title>
+</head>
+<body>
+    {% if info %}
+        <h1>{{ info.first_name }} {% if info.middle_name %}{{ info.middle_name }} {% endif %}{{ info.last_name }}</h1>
+        <p><strong>Summary:</strong> {{ info.summary }}</p>
+        <h3>Contact Details</h3>
+        <ul>
+            <li>Email: {{ info.email }}</li>
+            <li>Phone: {{ info.contact_number }}</li>
+            <li>Address: {{ info.address }}</li>
+        </ul>
+    {% else %}
+        <p>No personal information added yet.</p>
+    {% endif %}
+</body>
+</html>

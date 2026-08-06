@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ project.project_name }}</title>
+</head>
+<body>
+    <h1>{{ project.project_name }}</h1>
+    <p><strong>Tech Stack:</strong> {{ project.tech_stack }}</p>
+    <p><strong>Description:</strong> {{ project.description }}</p>
+    
+    {% if project.link %}
+        <p><a href="{{ project.link }}" target="_blank">View Project Source/Live Demo</a></p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'project_list' %}">← Back to Projects</a>
+</body>
+</html>

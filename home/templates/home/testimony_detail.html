@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5" style="max-width: 800px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-primary mb-0">Client Testimonies</h2>
+            <a href="{% url 'add_testimony' %}" class="btn btn-primary fw-bold">+ Leave Testimony</a>
+        </div>
+
+        <div class="list-group shadow-sm">
+            {% for testimony in testimonies %}
+                <a href="{% url 'testimony_detail' testimony.pk %}" class="list-group-item list-group-item-action p-3">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <h5 class="mb-1 text-dark fw-semibold">{{ testimony.full_name }}</h5>
+                        <small class="text-muted">{{ testimony.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    <p class="mb-1 text-secondary mt-2">{{ testimony.content|truncatewords:20 }}</p>
+                    <small class="text-primary">Read full testimony &rarr;</small>
+                </a>
+            {% empty %}
+                <div class="p-4 text-center text-muted bg-white border rounded">
+                    No testimonies submitted yet. Be the first to leave one!
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
