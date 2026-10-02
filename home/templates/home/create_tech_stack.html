@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Tech Stack</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background-color: #222;
+            color: white;
+            padding: 18px 30px;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        .form-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+
+            box-shadow:
+                0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .errorlist {
+            color: red;
+            margin-top: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #222;
+            color: white;
+
+            border: none;
+
+            padding: 11px 18px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+        }
+
+        .back-btn {
+            background-color: #777;
+            color: white;
+
+            padding: 11px 18px;
+
+            border-radius: 5px;
+
+            text-decoration: none;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="navbar">
+
+        <h2>
+            Portfolio Dashboard
+        </h2>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <div class="form-box">
+
+
+            <h1>
+                Create Tech Stack
+            </h1>
+
+
+            <form method="POST">
+
+
+                {% csrf_token %}
+
+
+                {{ form.non_field_errors }}
+
+
+                <label for="{{ form.name.id_for_label }}">
+
+                    Tech Stack Name
+
+                </label>
+
+
+                {{ form.name }}
+
+
+                {{ form.name.errors }}
+
+
+                <div class="buttons">
+
+
+                    <button type="submit">
+
+                        Add Tech Stack
+
+                    </button>
+
+
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="back-btn"
+                    >
+
+                        Cancel
+
+                    </a>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>
