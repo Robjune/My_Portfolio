@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
-from django.contrib.admin.views.decorators import staff_member_required
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
@@ -13,11 +13,24 @@ from .models import (
     TechStack
 )
 
-from .forms import ProjectForm, TestimonyForm
+from .forms import (
+    ProjectForm,
+    TestimonyForm,
+    TechStackForm,
+    DashboardProjectForm
+)
 
 
 # =========================================================
-# PUBLIC VIEWS - QUIZ 1 & 2
+# SUPERUSER CHECK
+# =========================================================
+
+def superuser_required(user):
+    return user.is_authenticated and user.is_superuser
+
+
+# =========================================================
+# PUBLIC PORTFOLIO VIEWS
 # =========================================================
 
 def project_list(request):
@@ -26,17 +39,24 @@ def project_list(request):
     return render(
         request,
         'home/project_list.html',
-        {'projects': projects}
+        {
+            'projects': projects
+        }
     )
 
 
 def project_detail(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(
+        Project,
+        pk=pk
+    )
 
     return render(
         request,
         'home/project_detail.html',
-        {'project': project}
+        {
+            'project': project
+        }
     )
 
 
@@ -46,36 +66,48 @@ def personal_info(request):
     return render(
         request,
         'home/personal_info.html',
-        {'info': info}
+        {
+            'info': info
+        }
     )
 
 
 # =========================================================
-# OLD OWNER-ONLY PROJECT VIEW
+# OLD ADD PROJECT VIEW
+# NOW ALSO SUPERUSER ONLY
 # =========================================================
 
-@staff_member_required
+@user_passes_test(
+    superuser_required,
+    login_url='admin_login'
+)
 def add_project(request):
 
     if request.method == 'POST':
+
         form = ProjectForm(request.POST)
 
         if form.is_valid():
+
             form.save()
+
             return redirect('project_list')
 
     else:
+
         form = ProjectForm()
 
     return render(
         request,
         'home/add_project.html',
-        {'form': form}
+        {
+            'form': form
+        }
     )
 
 
 # =========================================================
-# PUBLIC CONTACT VIEW
+# CONTACT / INQUIRY
 # =========================================================
 
 def contact_view(request):
@@ -100,7 +132,7 @@ def contact_view(request):
 
 
 # =========================================================
-# TESTIMONY VIEWS
+# TESTIMONIES
 # =========================================================
 
 def add_testimony(request):
@@ -110,16 +142,21 @@ def add_testimony(request):
         form = TestimonyForm(request.POST)
 
         if form.is_valid():
+
             form.save()
+
             return redirect('testimony_list')
 
     else:
+
         form = TestimonyForm()
 
     return render(
         request,
         'home/add_testimony.html',
-        {'form': form}
+        {
+            'form': form
+        }
     )
 
 
@@ -142,7 +179,9 @@ def testimony_detail(request, pk):
     return render(
         request,
         'home/testimony_detail.html',
-        {'testimony': testimony}
+        {
+            'testimony': testimony
+        }
     )
 
 
@@ -153,9 +192,12 @@ def testimony_detail(request, pk):
 
 def admin_login(request):
 
-    # If already logged in as superuser,
-    # send user directly to dashboard
-    if request.user.is_authenticated and request.user.is_superuser:
+    # If already logged in as a superuser,
+    # go directly to dashboard.
+    if (
+        request.user.is_authenticated
+        and request.user.is_superuser
+    ):
         return redirect('dashboard')
 
     if request.method == 'POST':
@@ -169,35 +211,21 @@ def admin_login(request):
             password=password
         )
 
-        # Only superusers are allowed
+        # Only superusers are allowed.
         if user is not None and user.is_superuser:
 
             login(request, user)
 
             return redirect('dashboard')
 
-        else:
-
-            messages.error(
-                request,
-                'Invalid username/password or this account is not a superuser.'
-            )
+        messages.error(
+            request,
+            'Invalid username/password or this account is not a superuser.'
+        )
 
     return render(
         request,
         'home/admin_login.html'
-    )
-
-
-# =========================================================
-# SUPERUSER CHECK
-# =========================================================
-
-def superuser_required(user):
-
-    return (
-        user.is_authenticated
-        and user.is_superuser
     )
 
 
@@ -224,6 +252,80 @@ def dashboard(request):
         request,
         'home/dashboard.html',
         context
+    )
+
+
+# =========================================================
+# CREATE TECH STACK
+# =========================================================
+
+@user_passes_test(
+    superuser_required,
+    login_url='admin_login'
+)
+def create_tech_stack(request):
+
+    if request.method == 'POST':
+
+        form = TechStackForm(request.POST)
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect('dashboard')
+
+    else:
+
+        form = TechStackForm()
+
+    return render(
+        request,
+        'home/create_tech_stack.html',
+        {
+            'form': form
+        }
+    )
+
+
+# =========================================================
+# CREATE PROJECT
+# =========================================================
+
+@user_passes_test(
+    superuser_required,
+    login_url='admin_login'
+)
+def create_project(request):
+
+    if request.method == 'POST':
+
+        form = DashboardProjectForm(request.POST)
+
+        if form.is_valid():
+
+            project = Project.objects.create(
+                project_name=form.cleaned_data['project_name'],
+                description=form.cleaned_data['description'],
+                link=form.cleaned_data['link']
+            )
+
+            project.tech_stack.add(
+                form.cleaned_data['tech_stack']
+            )
+
+            return redirect('dashboard')
+
+    else:
+
+        form = DashboardProjectForm()
+
+    return render(
+        request,
+        'home/create_project.html',
+        {
+            'form': form
+        }
     )
 
 

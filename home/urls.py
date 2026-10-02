@@ -4,10 +4,7 @@ from . import views
 
 urlpatterns = [
 
-    # =====================================================
-    # QUIZ 1 & 2
-    # =====================================================
-
+    # Public portfolio
     path(
         'projects/',
         views.project_list,
@@ -26,23 +23,21 @@ urlpatterns = [
         name='personal_info'
     ),
 
-
-    # =====================================================
-    # QUIZ 3
-    # =====================================================
-
+    # Old project creation
     path(
         'projects/add/',
         views.add_project,
         name='add_project'
     ),
 
+    # Contact
     path(
         'contact/',
         views.contact_view,
         name='contact'
     ),
 
+    # Testimonies
     path(
         'testimonies/',
         views.TestimonyListView.as_view(),
@@ -61,11 +56,7 @@ urlpatterns = [
         name='testimony_detail'
     ),
 
-
-    # =====================================================
-    # QUIZ 5 & 6
-    # =====================================================
-
+    # Admin login/logout
     path(
         'signin/',
         views.admin_login,
@@ -73,14 +64,29 @@ urlpatterns = [
     ),
 
     path(
+        'logout/',
+        views.admin_logout,
+        name='admin_logout'
+    ),
+
+    # Dashboard
+    path(
         'dashboard/',
         views.dashboard,
         name='dashboard'
     ),
 
+    # Create Tech Stack
     path(
-        'logout/',
-        views.admin_logout,
-        name='admin_logout'
+        'dashboard/tech-stacks/create/',
+        views.create_tech_stack,
+        name='create_tech_stack'
+    ),
+
+    # Create Project
+    path(
+        'dashboard/projects/create/',
+        views.create_project,
+        name='create_project'
     ),
 ]
