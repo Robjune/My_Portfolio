@@ -4,7 +4,14 @@ from . import views
 
 urlpatterns = [
 
-    # Public portfolio
+    # Homepage
+    path(
+        '',
+        views.project_list,
+        name='home'
+    ),
+
+    # Public Portfolio
     path(
         'projects/',
         views.project_list,
@@ -23,7 +30,7 @@ urlpatterns = [
         name='personal_info'
     ),
 
-    # Old project creation
+    # Old Project Creation
     path(
         'projects/add/',
         views.add_project,
@@ -56,13 +63,14 @@ urlpatterns = [
         name='testimony_detail'
     ),
 
-    # Admin login/logout
+    # Admin / Superuser Login
     path(
         'signin/',
         views.admin_login,
         name='admin_login'
     ),
 
+    # Logout
     path(
         'logout/',
         views.admin_logout,
